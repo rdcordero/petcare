@@ -3,7 +3,9 @@
   "appName": "PetCare",
   "webDir": "dist",
   "server": {
-    "androidScheme": "https"
+    "androidScheme": "https",
+    "url": "https://petcare-lemon.vercel.app",
+    "cleartext": false
   },
   "android": {
     "backgroundColor": "#FFF7FE"
