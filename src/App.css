@@ -20,6 +20,7 @@
   border-top: 1px solid #eee;
   z-index: 900;
   box-shadow: 0 -2px 12px rgba(0,0,0,.04);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .nav-btn {
@@ -35,11 +36,11 @@
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  transition: color .2s;
+  transition: color .2s, transform .1s;
 }
 .nav-btn span:first-child { font-size: 20px; }
 .nav-btn.active { color: #7C3AED; }
-.nav-btn:hover { color: #A78BFA; }
+.nav-btn:active { transform: scale(0.92); }
 
 /* Animations */
 @keyframes fadeIn {
