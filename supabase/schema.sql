@@ -13,6 +13,7 @@ create table if not exists dogs (
   emoji text default '🐶',
   photo_url text,
   height numeric(5,2),
+  clinic_id uuid references vet_clinics(id) on delete set null,
   created_at timestamptz default now()
 );
 

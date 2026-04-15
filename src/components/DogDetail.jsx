@@ -113,7 +113,7 @@ export default function DogDetail({ dog, onBack, onDogUpdated }) {
   const [careForm, setCareForm] = useState({ type: 'vacuna', name: '', date: '', next_date: '', notes: '' })
   const [vetForm, setVetForm] = useState({ date: '', vet: '', reason: '', notes: '', clinic_id: '' })
   const [weightForm, setWeightForm] = useState({ date: '', lb: '' })
-  const [editForm, setEditForm] = useState({ name: '', breed: '', birthdate: '', emoji: '🐶', height: '' })
+  const [editForm, setEditForm] = useState({ name: '', breed: '', birthdate: '', emoji: '🐶', height: '', clinic_id: '' })
   const [editPhoto, setEditPhoto] = useState(null)
   const [editPreview, setEditPreview] = useState(null)
 
@@ -158,7 +158,8 @@ export default function DogDetail({ dog, onBack, onDogUpdated }) {
       breed: dog.breed || '',
       birthdate: dog.birthdate || '',
       emoji: dog.emoji || '🐶',
-      height: dog.height || ''
+      height: dog.height || '',
+      clinic_id: dog.clinic_id || ''
     })
     setEditPhoto(null)
     setEditPreview(dog.photo_url || null)
@@ -181,7 +182,8 @@ export default function DogDetail({ dog, onBack, onDogUpdated }) {
       breed: editForm.breed || null,
       birthdate: editForm.birthdate || null,
       emoji: editForm.emoji,
-      height: editForm.height ? parseFloat(editForm.height) : null
+      height: editForm.height ? parseFloat(editForm.height) : null,
+      clinic_id: editForm.clinic_id || null
     }
     const updated = await updateDog(dog.id, updates, editPhoto)
     if (updated && onDogUpdated) onDogUpdated(updated)
@@ -225,7 +227,10 @@ ${weights.map(w => `<tr><td>${fmtDate(w.date)}</td><td>${w.lb}</td></tr>`).join(
     <div>
       {/* Header */}
       <div style={headerStyle}>
-        <button style={backBtn} onClick={onBack}>← Volver</button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <button style={backBtn} onClick={onBack}>← Volver</button>
+          <button style={{ ...backBtn, fontSize: 16 }} onClick={openEdit}>✏️</button>
+        </div>
         <div style={profileRow}>
           {dog.photo_url
             ? <img src={dog.photo_url} alt={dog.name} style={profilePhoto} />
@@ -235,6 +240,7 @@ ${weights.map(w => `<tr><td>${fmtDate(w.date)}</td><td>${w.lb}</td></tr>`).join(
             <h2 style={nameStyle}>{dog.name}</h2>
             <p style={metaStyle}>{dog.breed || 'Sin raza'}{dog.birthdate ? ` · ${calcAge(dog.birthdate)}` : ''}</p>
             {lastWeight && <p style={metaStyle}>⚖️ {lastWeight.lb} lb</p>}
+            {dog.clinic_id && (() => { const c = clinics.find(cl => cl.id === dog.clinic_id); return c ? <p style={metaStyle}>🏥 {c.name}</p> : null })()}
           </div>
         </div>
       </div>
@@ -244,7 +250,6 @@ ${weights.map(w => `<tr><td>${fmtDate(w.date)}</td><td>${w.lb}</td></tr>`).join(
         <button style={actionBtn('#7C3AED')} onClick={() => setModal('care')}>💉 Cuidado</button>
         <button style={actionBtn('#F472B6')} onClick={() => setModal('vet')}>🏥 Veterinario</button>
         <button style={actionBtn('#60A5FA')} onClick={() => setModal('weight')}>⚖️ Peso</button>
-        <button style={actionBtn('#F59E0B')} onClick={openEdit}>✏️ Editar</button>
         <button style={actionBtn('#34D399')} onClick={exportPDF}>📄 PDF</button>
       </div>
 
@@ -407,6 +412,15 @@ ${weights.map(w => `<tr><td>${fmtDate(w.date)}</td><td>${w.lb}</td></tr>`).join(
           <label style={{ fontSize: 12, color: '#888', marginBottom: 4, display: 'block' }}>Fecha de nacimiento</label>
           <input style={inputStyle} type="date" value={editForm.birthdate} onChange={e => setEditForm({ ...editForm, birthdate: e.target.value })} />
           <input style={inputStyle} type="number" step="0.01" placeholder="Altura (cm)" value={editForm.height} onChange={e => setEditForm({ ...editForm, height: e.target.value })} />
+          <label style={{ fontSize: 12, color: '#888', marginBottom: 4, display: 'block' }}>Veterinaria asignada</label>
+          <select
+            style={inputStyle}
+            value={editForm.clinic_id}
+            onChange={e => setEditForm({ ...editForm, clinic_id: e.target.value })}
+          >
+            <option value="">— Sin veterinaria —</option>
+            {clinics.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
           <label style={{ fontSize: 12, color: '#888', marginBottom: 4, display: 'block' }}>Foto</label>
           <div style={{ marginBottom: 12, textAlign: 'center' }}>
             {editPreview && <img src={editPreview} alt="Preview" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', marginBottom: 8, border: '2px solid #EDE9FE' }} />}
