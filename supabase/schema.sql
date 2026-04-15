@@ -67,6 +67,20 @@ create table if not exists weight_records (
   created_at timestamptz default now()
 );
 
+-- Tabla de veterinarias
+create table if not exists vet_clinics (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users(id) on delete cascade not null,
+  name text not null,
+  address text,
+  phone text,
+  whatsapp text,
+  lat numeric(10,7),
+  lng numeric(10,7),
+  notes text,
+  created_at timestamptz default now()
+);
+
 -- ============================================
 -- Row Level Security (RLS)
 -- ============================================
@@ -75,6 +89,7 @@ alter table dogs enable row level security;
 alter table care_records enable row level security;
 alter table vet_visits enable row level security;
 alter table weight_records enable row level security;
+alter table vet_clinics enable row level security;
 
 -- Política para dogs: el usuario solo ve/crea/edita/borra sus propios perros
 create policy "Users can view own dogs"
@@ -143,3 +158,20 @@ create policy "Users can update own weight_records"
 create policy "Users can delete own weight_records"
   on weight_records for delete
   using (dog_id in (select id from dogs where user_id = auth.uid()));
+
+-- Política para vet_clinics
+create policy "Users can view own vet_clinics"
+  on vet_clinics for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert own vet_clinics"
+  on vet_clinics for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update own vet_clinics"
+  on vet_clinics for update
+  using (auth.uid() = user_id);
+
+create policy "Users can delete own vet_clinics"
+  on vet_clinics for delete
+  using (auth.uid() = user_id);
