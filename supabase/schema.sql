@@ -51,6 +51,7 @@ create table if not exists care_records (
 create table if not exists vet_visits (
   id uuid default gen_random_uuid() primary key,
   dog_id uuid references dogs(id) on delete cascade not null,
+  clinic_id uuid references vet_clinics(id) on delete set null,
   date date not null,
   vet text,
   reason text not null,

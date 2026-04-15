@@ -3,6 +3,7 @@ import { useCare } from '../hooks/useCare'
 import { useVet } from '../hooks/useVet'
 import { useWeight } from '../hooks/useWeight'
 import { useDogs } from '../hooks/useDogs'
+import { useVetClinics } from '../hooks/useVetClinics'
 import Modal from './Modal'
 
 /* ---------- helpers ---------- */
@@ -104,12 +105,13 @@ export default function DogDetail({ dog, onBack, onDogUpdated }) {
   const { visits, fetchVisits, addVisit, deleteVisit } = useVet(dog.id)
   const { weights, fetchWeights, addWeight, deleteWeight } = useWeight(dog.id)
   const { deleteDog, updateDog } = useDogs()
+  const { clinics } = useVetClinics()
 
   const [tab, setTab] = useState('care')
   const [modal, setModal] = useState(null) // 'care' | 'vet' | 'weight' | 'delete' | 'edit'
 
   const [careForm, setCareForm] = useState({ type: 'vacuna', name: '', date: '', next_date: '', notes: '' })
-  const [vetForm, setVetForm] = useState({ date: '', vet: '', reason: '', notes: '' })
+  const [vetForm, setVetForm] = useState({ date: '', vet: '', reason: '', notes: '', clinic_id: '' })
   const [weightForm, setWeightForm] = useState({ date: '', lb: '' })
   const [editForm, setEditForm] = useState({ name: '', breed: '', birthdate: '', emoji: '🐶', height: '' })
   const [editPhoto, setEditPhoto] = useState(null)
@@ -136,9 +138,10 @@ export default function DogDetail({ dog, onBack, onDogUpdated }) {
     e.preventDefault()
     await addVisit({
       date: vetForm.date, vet: vetForm.vet || null,
-      reason: vetForm.reason, notes: vetForm.notes || null
+      reason: vetForm.reason, notes: vetForm.notes || null,
+      clinic_id: vetForm.clinic_id || null
     })
-    setVetForm({ date: '', vet: '', reason: '', notes: '' })
+    setVetForm({ date: '', vet: '', reason: '', notes: '', clinic_id: '' })
     setModal(null)
   }
 
@@ -287,16 +290,20 @@ ${weights.map(w => `<tr><td>${fmtDate(w.date)}</td><td>${w.lb}</td></tr>`).join(
               <div style={{ fontSize: 36 }}>🏥</div>
               <p>No hay visitas al veterinario aún</p>
             </div>
-          ) : visits.map(v => (
+          ) : visits.map(v => {
+            const clinic = v.clinic_id ? clinics.find(c => c.id === v.clinic_id) : null
+            return (
             <div key={v.id} style={cardStyle}>
               <button style={deleteBtn} onClick={() => deleteVisit(v.id)} title="Eliminar">✕</button>
               <strong style={{ fontSize: 15, color: '#1e1e2f' }}>{v.reason}</strong>
               <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>
                 {fmtDate(v.date)}{v.vet ? ` · Dr. ${v.vet}` : ''}
               </div>
+              {clinic && <div style={{ fontSize: 12, color: '#7C3AED', marginTop: 2 }}>🏥 {clinic.name}</div>}
               {v.notes && <div style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>📝 {v.notes}</div>}
             </div>
-          ))
+            )
+          })
         )}
 
         {/* WEIGHT TAB */}
@@ -364,6 +371,15 @@ ${weights.map(w => `<tr><td>${fmtDate(w.date)}</td><td>${w.lb}</td></tr>`).join(
       {/* Modal: Vet */}
       <Modal open={modal === 'vet'} onClose={() => setModal(null)} title="Registrar visita veterinaria">
         <form onSubmit={handleAddVet}>
+          <label style={{ fontSize: 12, color: '#888', display: 'block', marginBottom: 4 }}>Clínica veterinaria</label>
+          <select
+            style={inputStyle}
+            value={vetForm.clinic_id}
+            onChange={e => setVetForm({ ...vetForm, clinic_id: e.target.value })}
+          >
+            <option value="">— Sin clínica —</option>
+            {clinics.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
           <label style={{ fontSize: 12, color: '#888', display: 'block', marginBottom: 4 }}>Fecha *</label>
           <input style={inputStyle} type="date" required value={vetForm.date} onChange={e => setVetForm({ ...vetForm, date: e.target.value })} />
           <input style={inputStyle} placeholder="Nombre del veterinario" value={vetForm.vet} onChange={e => setVetForm({ ...vetForm, vet: e.target.value })} />
