@@ -114,8 +114,8 @@ export default function VetClinics() {
   }
 
   const getGoogleMapsLink = (c) => {
-    if (c.lat && c.lng) return `https://www.google.com/maps?q=${c.lat},${c.lng}`
-    if (c.address) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`
+    if (c.lat && c.lng) return `https://www.google.com/maps/dir/?api=1&destination=${c.lat},${c.lng}`
+    if (c.address) return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c.address)}`
     return null
   }
 
@@ -211,7 +211,7 @@ export default function VetClinics() {
                     rel="noopener noreferrer"
                     style={actionBtn('#EA4335')}
                   >
-                    📍 Google Maps
+                    🧭 Cómo llegar
                   </a>
                 )}
                 <button
@@ -265,7 +265,7 @@ export default function VetClinics() {
                 rel="noopener noreferrer"
                 style={{ ...btnPrimary, display: 'block', textAlign: 'center', textDecoration: 'none', marginTop: 12, background: '#EA4335' }}
               >
-                📍 Abrir en Google Maps
+                🧭 Cómo llegar (Google Maps)
               </a>
             )}
           </div>
