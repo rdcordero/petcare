@@ -1,0 +1,11 @@
+{
+  "appId": "com.petcare.app",
+  "appName": "PetCare",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#FFF7FE"
+  }
+}
