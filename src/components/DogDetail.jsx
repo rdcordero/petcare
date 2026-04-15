@@ -45,12 +45,12 @@ const nameStyle = { fontSize: 22, fontWeight: 800, margin: 0 }
 const metaStyle = { fontSize: 13, opacity: 0.9, margin: '2px 0 0' }
 
 const actionsRow = {
-  display: 'flex', gap: 10, padding: '14px 16px', overflowX: 'auto'
+  display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, padding: '14px 16px'
 }
 const actionBtn = (bg) => ({
-  flex: '1 0 auto', padding: '10px 16px', borderRadius: 12, border: 'none',
+  padding: '12px 0', borderRadius: 12, border: 'none',
   background: bg, color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer',
-  whiteSpace: 'nowrap'
+  textAlign: 'center'
 })
 
 const tabsRow = {
@@ -112,6 +112,9 @@ export default function DogDetail({ dog, onBack, onDogUpdated }) {
 
   const [careForm, setCareForm] = useState({ type: 'vacuna', name: '', date: '', next_date: '', notes: '' })
   const [vetForm, setVetForm] = useState({ date: '', vet: '', reason: '', notes: '', clinic_id: '' })
+
+  // Default clinic for vet visit modal
+  const defaultClinicId = dog.clinic_id || (clinics.length === 1 ? clinics[0].id : '')
   const [weightForm, setWeightForm] = useState({ date: '', lb: '' })
   const [editForm, setEditForm] = useState({ name: '', breed: '', birthdate: '', emoji: '🐶', height: '', clinic_id: '' })
   const [editPhoto, setEditPhoto] = useState(null)
@@ -248,7 +251,7 @@ ${weights.map(w => `<tr><td>${fmtDate(w.date)}</td><td>${w.lb}</td></tr>`).join(
       {/* Action buttons */}
       <div style={actionsRow}>
         <button style={actionBtn('#7C3AED')} onClick={() => setModal('care')}>💉 Cuidado</button>
-        <button style={actionBtn('#F472B6')} onClick={() => setModal('vet')}>🏥 Veterinario</button>
+        <button style={actionBtn('#F472B6')} onClick={() => { setVetForm(f => ({ ...f, clinic_id: f.clinic_id || defaultClinicId })); setModal('vet') }}>🏥 Veterinario</button>
         <button style={actionBtn('#60A5FA')} onClick={() => setModal('weight')}>⚖️ Peso</button>
         <button style={actionBtn('#34D399')} onClick={exportPDF}>📄 PDF</button>
       </div>
