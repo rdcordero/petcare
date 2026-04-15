@@ -1,4 +1,4 @@
-const CACHE = 'petcare-v6'
+const CACHE = 'petcare-v7'
 const ASSETS = ['/', '/index.html', '/manifest.json']
 
 self.addEventListener('install', e => {

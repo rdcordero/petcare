@@ -390,7 +390,6 @@ ${weights.map(w => `<tr><td>${fmtDate(w.date)}</td><td>${w.lb}</td></tr>`).join(
           </select>
           <label style={{ fontSize: 12, color: '#888', display: 'block', marginBottom: 4 }}>Fecha *</label>
           <input style={inputStyle} type="date" required value={vetForm.date} onChange={e => setVetForm({ ...vetForm, date: e.target.value })} />
-          <input style={inputStyle} placeholder="Nombre del veterinario" value={vetForm.vet} onChange={e => setVetForm({ ...vetForm, vet: e.target.value })} />
           <input style={inputStyle} placeholder="Motivo de la visita *" required value={vetForm.reason} onChange={e => setVetForm({ ...vetForm, reason: e.target.value })} />
           <textarea style={{ ...inputStyle, minHeight: 60, resize: 'vertical' }} placeholder="Notas" value={vetForm.notes} onChange={e => setVetForm({ ...vetForm, notes: e.target.value })} />
           <button style={btnPrimary} type="submit">Guardar</button>
