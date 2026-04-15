@@ -91,6 +91,7 @@ const emptyState = { textAlign: 'center', padding: '32px 16px', color: '#aaa', f
 const CARE_TYPES = [
   { value: 'vacuna', label: '💉 Vacuna' },
   { value: 'desparasitante', label: '💊 Desparasitante' },
+  { value: 'antipulgas', label: '🐛 Antipulgas' },
   { value: 'baño', label: '🛁 Baño' },
   { value: 'otro', label: '📝 Otro' }
 ]

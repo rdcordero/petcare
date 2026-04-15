@@ -112,7 +112,7 @@ export default function Home({ onSelect }) {
       .in('dog_id', ids)
       .then(({ data }) => {
         if (!data) return
-        const s = { vacuna: 0, desparasitante: 0, baño: 0, otro: 0 }
+        const s = { vacuna: 0, desparasitante: 0, antipulgas: 0, baño: 0, otro: 0 }
         data.forEach(r => { s[r.type] = (s[r.type] || 0) + 1 })
         supabase
           .from('vet_visits')
@@ -177,6 +177,7 @@ export default function Home({ onSelect }) {
         <div style={summaryWrap}>
           <div style={summaryCard('#7C3AED')}>💉 Vacunas<br />{summary.vacuna}</div>
           <div style={summaryCard('#F472B6')}>💊 Despara.<br />{summary.desparasitante}</div>
+          <div style={summaryCard('#F59E0B')}>🐛 Pulgas<br />{summary.antipulgas}</div>
           <div style={summaryCard('#60A5FA')}>🛁 Baños<br />{summary.baño}</div>
           <div style={summaryCard('#34D399')}>🏥 Vet<br />{summary.veterinario}</div>
         </div>
