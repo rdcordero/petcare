@@ -251,7 +251,7 @@ ${weights.map(w => `<tr><td>${fmtDate(w.date)}</td><td>${w.lb}</td></tr>`).join(
       {/* Action buttons */}
       <div style={actionsRow}>
         <button style={actionBtn('#7C3AED')} onClick={() => setModal('care')}>💉 Cuidado</button>
-        <button style={actionBtn('#F472B6')} onClick={() => { setVetForm(f => ({ ...f, clinic_id: f.clinic_id || defaultClinicId })); setModal('vet') }}>🏥 Veterinario</button>
+        <button style={actionBtn('#F472B6')} onClick={() => { setVetForm({ date: '', vet: '', reason: '', notes: '', clinic_id: defaultClinicId }); setModal('vet') }}>🏥 Veterinario</button>
         <button style={actionBtn('#60A5FA')} onClick={() => setModal('weight')}>⚖️ Peso</button>
         <button style={actionBtn('#34D399')} onClick={exportPDF}>📄 PDF</button>
       </div>
